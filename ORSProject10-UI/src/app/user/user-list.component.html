@@ -1,0 +1,148 @@
+<app-navbar></app-navbar>
+<div class="content-wrapper" 
+ style="padding-top: 2%; padding-bottom:2%;
+
+background: black;
+background-attachment: fixed;
+background-size: cover;width:100%;
+  height: auto;"> 
+  <div class="container-fluid">
+
+    <div class="panel panel-primary">
+      <div class="panel-heading" style="height: 50px;">
+        <!-- <div class="col-sm-5"> -->
+        <div class="text-center">
+          <h1 class="text-dark font-weight-bold">{{'User List' | translate }}</h1>
+        </div>
+        </div>
+      <!-- <button class="filebtn third">Button 3</button> -->
+      <div class="row p-1">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-2">
+          <input type="text" class="form-control" [(ngModel)]="form.searchParams.firstName" style="background-color: rgb(1, 1, 7); font-variant: small-caps;"
+            placeholder="{{'Search First Name' | translate}}">
+
+        </div>
+        
+        <div class="col-sm-2">
+          <input type="text" style="background-color: rgb(1, 1, 7); font-variant: small-caps;" class="form-control" [(ngModel)]="form.searchParams.loginId" placeholder="{{'Search Email' | translate}}">
+        </div>
+        
+        <div class="col-sm-2">
+
+          <select class="form-control" name="roleId" [(ngModel)]="form.searchParams.roleId" aria-label="ngSelected" style="background-color: rgb(1, 1, 7); font-variant: small-caps;">
+            <option [ngValue]="" value="undefined">{{' Select Role' | translate }}</option>
+            <option *ngFor="let obj of form.preload.roleList" [value]="obj.key">{{obj.value}}</option>
+          </select>
+        </div>
+        <div class="col-sm-2">
+           <input type="text" style="background-color: rgb(1, 1, 7);" class="form-control" [(ngModel)]="form.searchParams.status" placeholder="{{'Search Status' | translate}}">
+        </div>
+        <div class="col-sm-1 ml-3">
+          <button (click)="submit()" style="background-color: rgba(159, 75, 30, 0.256);" class="btn btn-primary">
+            {{'Search' | translate }}</button>
+        </div>
+       
+        
+         <div class="col-lg-1 ml-4">
+          <button (click)="refresh()" style="background-color: purple;" type="button" class="btn btn-success">{{'Refresh' | translate}}
+          </button>
+        </div> 
+        
+
+        <!-- <div class="col-sm-1">
+          <button (click)="deleteMany()" class="btn btn-danger">
+            {{'Delete'| translate}}</button>
+        </div> -->
+      </div>
+
+
+      <div *ngIf="form.error" class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{form.message}}
+      </div>
+      <div *ngIf="!form.error && form.message != null" class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{form.message}}
+      </div>
+      <div class="p-1">
+        <div class="table-responsive">
+          <table class="table table-bordered table-dark table-hover">
+            <thead class="text-uppercase" style="background-color: #210e3c;">
+              <tr align="center"> 
+                <th><input type="checkbox" [(ngModel)]="isMasterSel"  name="list_name" value="h1" 
+                    (change)="checkUncheckAll($event)" /></th>
+                <th><font style="color: rgb(173, 209, 240);">{{'S.No' | translate}}</font></th>
+                <th><font style="color: rgb(173, 209, 240);">{{'Image' | translate}}</font></th>
+                <th><font style="color: rgb(173, 209, 240);">{{'First Name' | translate}}</font></th>
+                <th><font style="color: rgb(173, 209, 240);">{{'Last Name' | translate}}</font></th>
+                <th><font style="color: rgb(173, 209, 240);">{{'Login' | translate}}</font></th>
+                <th><font style="color: rgb(173, 209, 240);">{{'Status' | translate}}</font></th>
+                <th><font style="color: rgb(173, 209, 240);">{{'Role' | translate}}</font></th>
+                <th><font style="color: rgb(173, 209, 240);">{{'Phone' | translate}}</font></th>
+                <th><font style="color: rgb(173, 209, 240);">{{'DOB' | translate}}</font></th>
+                <th><font style="color: rgb(173, 209, 240);">{{'Edit' | translate}}</font></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let m of form.list; let i = index" align="center">
+                <td> <input type="checkbox" #checkboxes (change)="checklistUpdate()" [disabled]="m.roleName=='Admin'" name="list_name" id="{{m.id}}" value="{{isMasterSel}}" />
+                </td>
+                <td><font style="color: rgb(235, 190, 223);"> {{(form.pageNo*5)+i+ 1}} </font></td>
+                <td>
+                  <div *ngIf="m.imageId">
+                    <img src="http://localhost:8084/User/profilePic/{{m.id}}" height="55px" width="80px">
+                  </div>
+                  <div *ngIf="!m.imageId">
+                    <img src="../../assets/files/default.jpeg" height="55px" width="80px">
+                  </div>
+                </td>
+                <td><font style="color: rgb(235, 190, 223);">{{ m.firstName }} </font> </td>
+                <td><font style="color: rgb(192, 139, 178);">{{ m.lastName }} </font> </td>
+                <td><font style="color: rgb(214, 222, 168);"> {{ m.loginId }}</font>  </td>
+                <td> <font style="color: rgb(192, 139, 178);">{{ m.status }}</font>  </td>
+                <td><font style="color: rgb(192, 139, 178);"> {{ m.roleName }} </font> </td>
+                <td><font style="color: rgb(192, 139, 178);">{{ m.phone }}</font>  </td>
+                <td><font style="color: rgb(192, 139, 178);"> {{ m.dob | date : 'dd-MM-yyyy'}} </font> </td>
+                <td>
+                  <button  class="fa fa-edit text-primary " id="nnn" [disabled]="m.roleName=='Admin'" (click)="forward( '/user/' +  m.id)" style="
+                  cursor: pointer;"></button>
+                  <!-- <a (click)="forward( '/user/' +  m.id)" style="
+                    cursor: pointer;">
+                    <i class="fa fa-edit text-primary"></i>
+                  </a> -->
+                  <!-- /
+                  <a (click)="delete(m.id)" style="cursor: pointer;">
+                    <i class="fa fa-trash text-danger "></i>
+                  </a> -->
+                </td>
+              </tr>
+             </tbody>
+          </table>
+          <table style="width: 100%;">
+            <tr>
+              <td style="width: 30%;">
+          <button (click)="previous()" [disabled]="form.pageNo == 0" class="btn btn-info"> {{'Previous' | translate
+            }} </button>
+          </td>
+          <td style="width: 30%;">
+            <button (click)="deleteMany()" class="btn btn-danger">
+              {{'Delete'| translate}}</button>&nbsp;
+             
+          </td>
+          <td style="width: 50%;"> <button (click)="forward('/user')"  type="button" class="btn btn-success">{{'Add User' | translate}}
+          </button></td>
+          <td *ngIf="form.list.length!=0" style="width: 50%;"></td>
+          <td *ngIf="form.list.length==0" style="width: 50%;">
+            <a class="btn btn-warning mr-1" [routerLink]="['/userlist']" (click)="exit()">{{'Back' | translate}}</a></td><td>
+            <button (click)="next()" [disabled]="nextList==0" type="button" class="btn btn-info"> {{'Next' |
+              translate }}</button></td>
+
+            </tr>
+            </table>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<app-footer></app-footer>
